@@ -11,6 +11,7 @@ import { CompanyModule } from './modules/company';
 import { DatabaseModule } from './modules/database';
 import { DateModule } from './modules/date';
 import { FinanceModule } from './modules/finance';
+import { FoodModule } from './modules/food';
 import { GitModule } from './modules/git';
 import { HackerModule } from './modules/hacker';
 import { HelpersModule } from './modules/helpers';
@@ -75,6 +76,7 @@ export class Faker extends SimpleFaker {
   readonly database: DatabaseModule = new DatabaseModule(this);
   readonly date: DateModule = new DateModule(this);
   readonly finance = new FinanceModule(this);
+  readonly food = new FoodModule(this);
   readonly git: GitModule = new GitModule(this);
   readonly hacker: HackerModule = new HackerModule(this);
   readonly helpers: HelpersModule = new HelpersModule(this);
@@ -140,6 +142,8 @@ export class Faker extends SimpleFaker {
    * customFaker.person.lastName(); // 'Ocampo Corrales'
    *
    * customFaker.music.genre(); // throws Error as this data is not available in `es`
+   *
+   * @since 8.0.0
    */
   constructor(options: {
     /**
@@ -173,11 +177,35 @@ export class Faker extends SimpleFaker {
    * @param options.locale The name of the main locale to use.
    * @param options.localeFallback The name of the fallback locale to use.
    *
+   * @example
+   * new Faker({ locales: allLocales });
+   *
+   * @since 6.0.0
+   *
    * @deprecated Use `new Faker({ locale: [locale, localeFallback] })` instead.
    */
   constructor(options: {
+    /**
+     * The locale data to use for this instance.
+     *
+     * @deprecated Use `new Faker({ locale: [locale, localeFallback] })` instead.
+     */
     locales: Record<string, LocaleDefinition>;
+    /**
+     * The name of the main locale to use.
+     *
+     * @default 'en'
+     *
+     * @deprecated Use `new Faker({ locale: [locale, localeFallback] })` instead.
+     */
     locale?: string;
+    /**
+     * The name of the fallback locale to use.
+     *
+     * @default 'en'
+     *
+     * @deprecated Use `new Faker({ locale: [locale, localeFallback] })` instead.
+     */
     localeFallback?: string;
   });
   // This is somehow required for `ConstructorParameters<typeof Faker>[0]` to work
@@ -210,6 +238,8 @@ export class Faker extends SimpleFaker {
    * customFaker.person.lastName(); // 'Ocampo Corrales'
    *
    * customFaker.music.genre(); // throws Error as this data is not available in `es`
+   *
+   * @since 8.0.0
    */
   constructor(
     options:
@@ -317,6 +347,8 @@ export class Faker extends SimpleFaker {
    * // const { faker, fakerES_MX } = require("@faker-js/faker")
    * faker.getMetadata(); // { title: 'English', code: 'en', language: 'en', endonym: 'English', dir: 'ltr', script: 'Latn' }
    * fakerES_MX.getMetadata(); // { title: 'Spanish (Mexico)', code: 'es_MX', language: 'es', endonym: 'Español (México)', dir: 'ltr', script: 'Latn', country: 'MX' }
+   *
+   * @since 8.1.0
    */
   getMetadata(): MetadataDefinition {
     return this.rawDefinitions.metadata ?? {};
