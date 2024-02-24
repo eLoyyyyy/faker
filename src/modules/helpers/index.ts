@@ -4,8 +4,6 @@ import { deprecated } from '../../internal/deprecated';
 import { SimpleModuleBase } from '../../internal/module-base';
 import { fakeEval } from './eval';
 import { luhnCheckValue } from './luhn-check';
-import type { RecordKey } from './unique';
-import * as uniqueExec from './unique';
 
 /**
  * Returns a number based on given RegEx-based quantifier symbol or quantifier values.
@@ -205,14 +203,6 @@ export function legacyReplaceSymbolWithNumber(
  */
 export class SimpleHelpersModule extends SimpleModuleBase {
   /**
-   * Global store of unique values.
-   * This means that faker should *never* return duplicate values across all API methods when using `faker.helpers.unique` without passing `options.store`.
-   *
-   * @internal
-   */
-  private readonly uniqueStore: Record<RecordKey, RecordKey> = {};
-
-  /**
    * Slugifies the given string.
    * For that all spaces (` `) are replaced by hyphens (`-`)
    * and most non word characters except for dots and hyphens will be removed.
@@ -228,9 +218,9 @@ export class SimpleHelpersModule extends SimpleModuleBase {
   slugify(string: string = ''): string {
     return string
       .normalize('NFKD') //for example è decomposes to as e +  ̀
-      .replace(/[\u0300-\u036F]/g, '') // removes combining marks
-      .replace(/ /g, '-') // replaces spaces with hyphens
-      .replace(/[^\w.-]+/g, ''); // removes all non-word characters except for dots and hyphens
+      .replaceAll(/[\u0300-\u036F]/g, '') // removes combining marks
+      .replaceAll(' ', '-') // replaces spaces with hyphens
+      .replaceAll(/[^\w.-]+/g, ''); // removes all non-word characters except for dots and hyphens
   }
 
   /**
@@ -797,7 +787,7 @@ export class SimpleHelpersModule extends SimpleModuleBase {
       let value = data[p];
       if (typeof value === 'string') {
         // escape $, source: https://stackoverflow.com/a/6969486/6897682
-        value = value.replace(/\$/g, '$$$$');
+        value = value.replaceAll('$', '$$$$');
         str = str.replace(re, value);
       } else {
         str = str.replace(re, value);
@@ -989,7 +979,8 @@ export class SimpleHelpersModule extends SimpleModuleBase {
     }
 
     // In case of rounding errors, return the last element
-    return array[array.length - 1].value;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return array.at(-1)!.value;
   }
 
   /**
@@ -1129,114 +1120,6 @@ export class SimpleHelpersModule extends SimpleModuleBase {
   }
 
   /**
-   * Generates a unique result using the results of the given method.
-   * Used unique entries will be stored internally and filtered from subsequent calls.
-   *
-   * @template TMethod The type of the method to execute.
-   *
-   * @param method The method used to generate the values.
-   * @param args The arguments used to call the method. Defaults to `[]`.
-   * @param options The optional options used to configure this method.
-   * @param options.startTime This parameter does nothing.
-   * @param options.maxTime The time in milliseconds this method may take before throwing an error. Defaults to `50`.
-   * @param options.maxRetries The total number of attempts to try before throwing an error. Defaults to `50`.
-   * @param options.currentIterations This parameter does nothing.
-   * @param options.exclude The value or values that should be excluded/skipped. Defaults to `[]`.
-   * @param options.compare The function used to determine whether a value was already returned. Defaults to check the existence of the key.
-   * @param options.store The store of unique entries. Defaults to a global store.
-   *
-   * @see https://github.com/faker-js/faker/issues/1785#issuecomment-1407773744
-   *
-   * @example
-   * faker.helpers.unique(faker.person.firstName) // 'Corbin'
-   *
-   * @since 7.5.0
-   *
-   * @deprecated Please find a dedicated npm package instead, or even create one on your own if you want to.
-   * More info can be found in issue [faker-js/faker #1785](https://github.com/faker-js/faker/issues/1785).
-   */
-  unique<
-    TMethod extends (
-      // TODO @Shinigami92 2023-02-14: This `any` type can be fixed by anyone if they want to.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...parameters: any[]
-    ) => RecordKey,
-  >(
-    method: TMethod,
-    args: Parameters<TMethod> = [] as unknown as Parameters<TMethod>,
-    options: {
-      /**
-       * This parameter does nothing.
-       *
-       * @default new Date().getTime()
-       */
-      startTime?: number;
-      /**
-       * The time in milliseconds this method may take before throwing an error.
-       *
-       * @default 50
-       */
-      maxTime?: number;
-      /**
-       * The total number of attempts to try before throwing an error.
-       *
-       * @default 50
-       */
-      maxRetries?: number;
-      /**
-       * This parameter does nothing.
-       *
-       * @default 0
-       */
-      currentIterations?: number;
-      /**
-       * The value or values that should be excluded/skipped.
-       *
-       * @default []
-       */
-      exclude?: RecordKey | RecordKey[];
-      /**
-       * The function used to determine whether a value was already returned.
-       *
-       * Defaults to check the existence of the key.
-       *
-       * @default (obj, key) => (obj[key] === undefined ? -1 : 0)
-       */
-      compare?: (obj: Record<RecordKey, RecordKey>, key: RecordKey) => 0 | -1;
-      /**
-       * The store of unique entries.
-       *
-       * Defaults to a global store.
-       */
-      store?: Record<RecordKey, RecordKey>;
-    } = {}
-  ): ReturnType<TMethod> {
-    deprecated({
-      deprecated: 'faker.helpers.unique',
-      proposed:
-        'https://github.com/faker-js/faker/issues/1785#issuecomment-1407773744',
-      since: '8.0',
-      until: '9.0',
-    });
-
-    const {
-      maxTime = 50,
-      maxRetries = 50,
-      exclude = [],
-      store = this.uniqueStore,
-    } = options;
-    return uniqueExec.exec(method, args, {
-      ...options,
-      startTime: Date.now(),
-      maxTime,
-      maxRetries,
-      currentIterations: 0,
-      exclude,
-      store,
-    });
-  }
-
-  /**
    * Generates an array containing values returned by the given method.
    *
    * @template TResult The type of elements.
@@ -1342,7 +1225,7 @@ export class HelpersModule extends SimpleHelpersModule {
    * faker.helpers.fake('{{person.lastName}}, {{person.firstName}} {{person.suffix}}') // 'Durgan, Noe MD'
    * faker.helpers.fake('This is static test.') // 'This is static test.'
    * faker.helpers.fake('Good Morning {{person.firstName}}!') // 'Good Morning Estelle!'
-   * faker.helpers.fake('You can call me at {{phone.number(!## ### #####!)}}.') // 'You can call me at 202 555 973722.'
+   * faker.helpers.fake('You can visit me at {{location.streetAddress(true)}}.') // 'You can visit me at 3393 Ronny Way Apt. 742.'
    * faker.helpers.fake('I flipped the coin and got: {{helpers.arrayElement(["heads", "tails"])}}') // 'I flipped the coin and got: tails'
    * faker.helpers.fake('Your PIN number is: {{string.numeric(4, {"exclude": ["0"]})}}') // 'Your PIN number is: 4834'
    *
