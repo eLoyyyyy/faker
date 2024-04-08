@@ -66,20 +66,21 @@ node_modules/
 .github/workflows/*.js
 
 # IDE
-/.idea
-/nbproject
+.idea
+nbproject
 
 # Meteor build and version
 .build*
 versions.json
 
 # Dist
-/dist
-/docs/.vitepress/cache
-/docs/.vitepress/dist
-/docs/api/typedoc.json
-/docs/public/api-diff-index.json
-/lib
+dist
+
+# Docs
+docs/.vitepress/cache
+docs/.vitepress/dist
+docs/api/typedoc.json
+docs/public/api-diff-index.json
 
 # Faker
 TAGS
