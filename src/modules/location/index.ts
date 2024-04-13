@@ -559,7 +559,7 @@ export class LocationModule extends ModuleBase {
       fractionDigits: 5,
     }); // in ° radians
 
-    const radiusMetric = isMetric ? radius : radius * 1.60934; // in km
+    const radiusMetric = isMetric ? radius : radius * 1.609_34; // in km
     const errorCorrection = 0.995; // avoid float issues
     const distanceInKm =
       this.faker.number.float({

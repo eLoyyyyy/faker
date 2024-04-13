@@ -26,7 +26,7 @@ function newTwister(
 describe('MersenneTwister19937', () => {
   describe('genrandInt32()', () => {
     it('should be able to return 0', () => {
-      const twister = newTwister(257678572);
+      const twister = newTwister(257_678_572);
 
       // There is no single value seed that can produce 0 in the first call
       for (let i = 0; i < 5; i++) {
@@ -38,7 +38,7 @@ describe('MersenneTwister19937', () => {
     });
 
     it('should be able to return 2^32-1', () => {
-      const twister = newTwister(2855577693);
+      const twister = newTwister(2_855_577_693);
       const actual = twister.genrandInt32();
       expect(actual).toBe(2 ** 32 - 1);
     });

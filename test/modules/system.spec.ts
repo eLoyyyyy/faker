@@ -418,7 +418,7 @@ describe('system', () => {
   describe('extra tests', () => {
     describe('commonFileName()', () => {
       it('#770', () => {
-        fakerSK.seed(5423027051750305);
+        fakerSK.seed(5_423_027_051_750_305);
         fakerSK.system.commonFileName('xml');
         fakerSK.system.commonFileName('xml');
       });

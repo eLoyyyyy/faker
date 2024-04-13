@@ -617,7 +617,7 @@ describe('internet', () => {
 
           expect(port).toBeTypeOf('number');
           expect(port).toBeGreaterThanOrEqual(0);
-          expect(port).toBeLessThanOrEqual(65535);
+          expect(port).toBeLessThanOrEqual(65_535);
           expect(String(port)).toSatisfy(validator.isPort);
         });
       });

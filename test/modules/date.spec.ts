@@ -650,23 +650,23 @@ describe('date', () => {
 
     it('should use the refDateSource when refDate is not provided (with function)', () => {
       faker.setDefaultRefDate(() => new Date(Date.UTC(2020, 0, 1)));
-      faker.seed(20200101);
+      faker.seed(20_200_101);
       const date = faker.date.past();
       expect(date).toBeInstanceOf(Date);
       expect(date).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
 
-      faker.seed(20200101);
+      faker.seed(20_200_101);
       const date2 = faker.date.past();
       expect(date2).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
     });
 
     it('should use the refDateSource when refDate is not provided (with value)', () => {
       faker.setDefaultRefDate(Date.UTC(2020, 0, 1));
-      faker.seed(20200101);
+      faker.seed(20_200_101);
       const date = faker.date.past();
       expect(date).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
 
-      faker.seed(20200101);
+      faker.seed(20_200_101);
       const date2 = faker.date.past();
       expect(date2).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
     });
@@ -674,13 +674,13 @@ describe('date', () => {
     it('should not use the refDateSource when refDate is provided (with function)', () => {
       const spy: () => Date = vi.fn();
       faker.setDefaultRefDate(spy);
-      faker.seed(20200101);
+      faker.seed(20_200_101);
 
       const date = faker.date.past({ refDate: Date.UTC(2020, 0, 1) });
       expect(date).toBeInstanceOf(Date);
       expect(date).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
 
-      faker.seed(20200101);
+      faker.seed(20_200_101);
       const date2 = faker.date.past({ refDate: Date.UTC(2020, 0, 1) });
       expect(date2).toMatchInlineSnapshot(`2019-11-06T02:07:17.181Z`);
 

@@ -76,9 +76,9 @@ import type { Randomizer } from '../randomizer';
 export class MersenneTwister19937 {
   private readonly N = 624;
   private readonly M = 397;
-  private readonly MATRIX_A = 0x9908b0df; // constant vector a
-  private readonly UPPER_MASK = 0x80000000; // most significant w-r bits
-  private readonly LOWER_MASK = 0x7fffffff; // least significant r bits
+  private readonly MATRIX_A = 0x99_08_b0_df; // constant vector a
+  private readonly UPPER_MASK = 0x80_00_00_00; // most significant w-r bits
+  private readonly LOWER_MASK = 0x7f_ff_ff_ff; // least significant r bits
   private mt: number[] = Array.from({ length: this.N }); // the array for the state vector
   private mti = this.N + 1; // mti==N+1 means mt[N] is not initialized
 
@@ -102,7 +102,7 @@ export class MersenneTwister19937 {
    */
   private subtraction32(n1: number, n2: number): number {
     return n1 < n2
-      ? this.unsigned32((0x100000000 - (n2 - n1)) & 0xffffffff)
+      ? this.unsigned32((0x1_00_00_00_00 - (n2 - n1)) & 0xff_ff_ff_ff)
       : n1 - n2;
   }
 
@@ -114,7 +114,7 @@ export class MersenneTwister19937 {
    * @param n2 number two for addition
    */
   private addition32(n1: number, n2: number): number {
-    return this.unsigned32((n1 + n2) & 0xffffffff);
+    return this.unsigned32((n1 + n2) & 0xff_ff_ff_ff);
   }
 
   /**
@@ -141,13 +141,13 @@ export class MersenneTwister19937 {
    * @param seed the seed to use
    */
   initGenrand(seed: number): void {
-    this.mt[0] = this.unsigned32(seed & 0xffffffff);
+    this.mt[0] = this.unsigned32(seed & 0xff_ff_ff_ff);
     for (this.mti = 1; this.mti < this.N; this.mti++) {
       this.mt[this.mti] =
         //(1812433253 * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti);
         this.addition32(
           this.multiplication32(
-            1812433253,
+            1_812_433_253,
             this.unsigned32(
               this.mt[this.mti - 1] ^ (this.mt[this.mti - 1] >>> 30)
             )
@@ -159,7 +159,7 @@ export class MersenneTwister19937 {
       /* In the previous versions, MSBs of the seed affect   */
       /* only MSBs of the array mt[].                        */
       /* 2002/01/09 modified by Makoto Matsumoto             */
-      this.mt[this.mti] = this.unsigned32(this.mt[this.mti] & 0xffffffff);
+      this.mt[this.mti] = this.unsigned32(this.mt[this.mti] & 0xff_ff_ff_ff);
     }
   }
 
@@ -170,7 +170,7 @@ export class MersenneTwister19937 {
    * @param keyLength is its length
    */
   initByArray(initKey: number[], keyLength: number): void {
-    this.initGenrand(19650218);
+    this.initGenrand(19_650_218);
     let i = 1;
     let j = 0;
     let k = this.N > keyLength ? this.N : keyLength;
@@ -182,7 +182,7 @@ export class MersenneTwister19937 {
             this.mt[i] ^
               this.multiplication32(
                 this.unsigned32(this.mt[i - 1] ^ (this.mt[i - 1] >>> 30)),
-                1664525
+                1_664_525
               )
           ),
           initKey[j]
@@ -190,7 +190,7 @@ export class MersenneTwister19937 {
         j
       );
       // mt[i] &= 0xffffffff; for WORDSIZE > 32 machines
-      this.mt[i] = this.unsigned32(this.mt[i] & 0xffffffff);
+      this.mt[i] = this.unsigned32(this.mt[i] & 0xff_ff_ff_ff);
       i++;
       j++;
       if (i >= this.N) {
@@ -210,13 +210,13 @@ export class MersenneTwister19937 {
           this.mt[i] ^
             this.multiplication32(
               this.unsigned32(this.mt[i - 1] ^ (this.mt[i - 1] >>> 30)),
-              1566083941
+              1_566_083_941
             )
         ),
         i
       );
       // mt[i] &= 0xffffffff; for WORDSIZE > 32 machines
-      this.mt[i] = this.unsigned32(this.mt[i] & 0xffffffff);
+      this.mt[i] = this.unsigned32(this.mt[i] & 0xff_ff_ff_ff);
       i++;
       if (i >= this.N) {
         this.mt[0] = this.mt[this.N - 1];
@@ -224,7 +224,7 @@ export class MersenneTwister19937 {
       }
     }
 
-    this.mt[0] = 0x80000000; // MSB is 1; assuring non-zero initial array
+    this.mt[0] = 0x80_00_00_00; // MSB is 1; assuring non-zero initial array
   }
 
   // moved outside of genrandInt32() by jwatte 2010-11-17; generate less garbage
@@ -280,8 +280,8 @@ export class MersenneTwister19937 {
 
     // Tempering
     y = this.unsigned32(y ^ (y >>> 11));
-    y = this.unsigned32(y ^ ((y << 7) & 0x9d2c5680));
-    y = this.unsigned32(y ^ ((y << 15) & 0xefc60000));
+    y = this.unsigned32(y ^ ((y << 7) & 0x9d_2c_56_80));
+    y = this.unsigned32(y ^ ((y << 15) & 0xef_c6_00_00));
     y = this.unsigned32(y ^ (y >>> 18));
 
     return y;
@@ -298,21 +298,21 @@ export class MersenneTwister19937 {
    * Generates a random number on [0,1]-real-interval
    */
   genrandReal1(): number {
-    return this.genrandInt32() * (1.0 / 4294967295.0); // divided by 2^32-1
+    return this.genrandInt32() * (1.0 / 4_294_967_295.0); // divided by 2^32-1
   }
 
   /**
    * Generates a random number on [0,1)-real-interval
    */
   genrandReal2(): number {
-    return this.genrandInt32() * (1.0 / 4294967296.0); // divided by 2^32
+    return this.genrandInt32() * (1.0 / 4_294_967_296.0); // divided by 2^32
   }
 
   /**
    * Generates a random number on (0,1)-real-interval
    */
   genrandReal3(): number {
-    return (this.genrandInt32() + 0.5) * (1.0 / 4294967296.0); // divided by 2^32
+    return (this.genrandInt32() + 0.5) * (1.0 / 4_294_967_296.0); // divided by 2^32
   }
 
   /**
@@ -321,7 +321,7 @@ export class MersenneTwister19937 {
   genrandRes53(): number {
     const a = this.genrandInt32() >>> 5,
       b = this.genrandInt32() >>> 6;
-    return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
+    return (a * 67_108_864.0 + b) * (1.0 / 9_007_199_254_740_992.0);
   }
   // These real versions are due to Isaku Wada, 2002/01/09
 }

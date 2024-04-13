@@ -8,7 +8,7 @@ function degreesToRadians(degrees: number) {
 }
 
 function kilometersToMiles(miles: number) {
-  return miles * 0.621371;
+  return miles * 0.621_371;
 }
 
 /**
@@ -182,9 +182,9 @@ describe('location', () => {
         });
 
         it.each([
-          ['IL', 60001, 62999],
-          ['GA', 30001, 31999],
-          ['WA', 98001, 99403],
+          ['IL', 60_001, 62_999],
+          ['GA', 30_001, 31_999],
+          ['WA', 98_001, 99_403],
         ])('returns zipCode valid for state %s', (state, lower, upper) => {
           const zipCode1 = +fakerEN_US.location.zipCode({ state });
           expect(zipCode1).toBeGreaterThanOrEqual(lower);

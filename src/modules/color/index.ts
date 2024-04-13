@@ -793,7 +793,7 @@ export class ColorModule extends ModuleBase {
   }): string | number[];
   lab(options: { format?: ColorFormat } = {}): string | number[] {
     const { format = 'decimal' } = options;
-    const lab = [this.faker.number.float({ multipleOf: 0.000001 })];
+    const lab = [this.faker.number.float({ multipleOf: 0.000_001 })];
     for (let i = 0; i < 2; i++) {
       lab.push(
         this.faker.number.float({ min: -100, max: 100, multipleOf: 0.0001 })
@@ -889,7 +889,7 @@ export class ColorModule extends ModuleBase {
   }): string | number[];
   lch(options: { format?: ColorFormat } = {}): string | number[] {
     const { format = 'decimal' } = options;
-    const lch = [this.faker.number.float({ multipleOf: 0.000001 })];
+    const lch = [this.faker.number.float({ multipleOf: 0.000_001 })];
     for (let i = 0; i < 2; i++) {
       lch.push(this.faker.number.float({ max: 230, multipleOf: 0.1 }));
     }

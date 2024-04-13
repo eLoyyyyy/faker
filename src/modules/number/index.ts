@@ -420,7 +420,7 @@ export class NumberModule extends SimpleModuleBase {
     }
 
     const min = BigInt(options.min ?? 0);
-    const max = BigInt(options.max ?? min + BigInt(999999999999999));
+    const max = BigInt(options.max ?? min + BigInt(999_999_999_999_999));
 
     if (max === min) {
       return min;

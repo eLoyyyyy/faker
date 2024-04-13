@@ -43,7 +43,7 @@ export class ImageModule extends ModuleBase {
    */
   avatarGitHub(): string {
     return `https://avatars.githubusercontent.com/u/${this.faker.number.int(
-      100000000
+      100_000_000
     )}`;
   }
 

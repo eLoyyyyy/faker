@@ -195,7 +195,7 @@ export function generate(faker: Faker): string {
       return [
         faker.number.int({ min: 1, max: 4 }),
         faker.number.int(9),
-        faker.number.int({ min: 10000, max: 99999 }),
+        faker.number.int({ min: 10_000, max: 99_999 }),
         faker.number.int(9),
       ].join('.');
     },

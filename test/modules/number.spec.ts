@@ -43,8 +43,8 @@ describe('number', () => {
         .it('with bigint value', 123n)
         .it('with options', { min: -42, max: 69 })
         .it('with big options', {
-          min: 6135715171537515454317351n,
-          max: 32465761264574654845432354n,
+          min: 6_135_715_171_537_515_454_317_351n,
+          max: 32_465_761_264_574_654_845_432_354n,
         });
     });
   });
@@ -556,12 +556,12 @@ describe('number', () => {
 
       it('should generate a big bigInt value with low delta', () => {
         const generateBigInt = faker.number.bigInt({
-          min: 999999999n,
-          max: 1000000000n,
+          min: 999_999_999n,
+          max: 1_000_000_000n,
         });
         expect(generateBigInt).toBeTypeOf('bigint');
-        expect(generateBigInt).toBeGreaterThanOrEqual(999999999n);
-        expect(generateBigInt).toBeLessThanOrEqual(1000000000n);
+        expect(generateBigInt).toBeGreaterThanOrEqual(999_999_999n);
+        expect(generateBigInt).toBeLessThanOrEqual(1_000_000_000n);
       });
 
       it('should return a random bigint given a maximum value as BigInt', () => {
@@ -595,10 +595,12 @@ describe('number', () => {
       it('should return a random bigint for a very large range', () => {
         const randomBigInt = faker.number.bigInt({
           min: 0n,
-          max: 10000000000000000000000n,
+          max: 10_000_000_000_000_000_000_000n,
         });
         expect(randomBigInt).toBeGreaterThanOrEqual(0n);
-        expect(randomBigInt).toBeLessThanOrEqual(10000000000000000000000n);
+        expect(randomBigInt).toBeLessThanOrEqual(
+          10_000_000_000_000_000_000_000n
+        );
       });
 
       it('should not mutate the input object', () => {
@@ -615,7 +617,7 @@ describe('number', () => {
       });
 
       it('should throw when min > max', () => {
-        const min = 10000n;
+        const min = 10_000n;
         const max = 999n;
 
         expect(() => {
