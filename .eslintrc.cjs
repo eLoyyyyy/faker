@@ -51,7 +51,6 @@ module.exports = defineConfig({
     'unicorn/better-regex': 'off',
     'unicorn/consistent-function-scoping': 'off',
     'unicorn/import-style': 'off',
-    'unicorn/no-await-expression-member': 'off',
     'unicorn/no-object-as-default-parameter': 'off',
     'unicorn/prefer-export-from': 'off',
     'unicorn/prefer-string-slice': 'off',
