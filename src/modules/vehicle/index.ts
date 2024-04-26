@@ -96,7 +96,7 @@ export class VehicleModule extends ModuleBase {
       length: 1,
       casing: 'upper',
       exclude,
-    })}${this.faker.number.int({ min: 10_000, max: 99_999 })}`; // return five digit #
+    })}${this.faker.string.numeric({ length: 5, allowLeadingZeros: true })}`;
   }
 
   /**
